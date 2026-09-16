@@ -1,0 +1,4 @@
+module CTTMpvBridge {
+    umbrella header "CTTMpvBridge.h"
+    export *
+}

@@ -1,0 +1,22 @@
+[package]
+name = "ttmpv-engine"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Pure Safe Rust High-Performance Media Engine and Headless MPV Controller"
+repository.workspace = true
+
+[lib]
+name = "ttmpv_engine"
+crate-type = ["rlib", "staticlib", "cdylib"]
+
+[dependencies]
+libc = "0.2"
+thiserror = "2.0"
+parking_lot = "0.12"
+crossbeam-channel = "0.5"
+log = "0.4"
+
+[build-dependencies]
+pkg-config = "0.3"
