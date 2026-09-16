@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: BSD-3-Clause OR Apache-2.0
+#
+# Copyright (c) 2026 Witt Kung <witt.w.kung@gmail.com>
+# All rights reserved.
+#
+# TTMPV: High-performance native media engine and headless playback core.
+
+load("@rules_swift//swift:swift.bzl", "swift_interop_hint", "swift_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "CTTMpvBridge",
+    srcs = ["Sources/CTTMpvBridge/CTTMpvBridge.c"],
+    hdrs = glob(["Sources/CTTMpvBridge/include/**/*.h"]),
+    aspect_hints = [":cttmpvbridge_swift_interop"],
+    defines = ["GL_SILENCE_DEPRECATION"],
+    includes = ["Sources/CTTMpvBridge/include"],
+    linkopts = [
+        "-L/opt/homebrew/lib",
+        "-L/usr/local/lib",
+        "-lmpv",
+        "-Wl,-rpath,/opt/homebrew/lib",
+    ],
+    tags = ["swift_module=CTTMpvBridge"],
+)
+
+swift_interop_hint(
+    name = "cttmpvbridge_swift_interop",
+    module_map = "Sources/CTTMpvBridge/include/module.modulemap",
+    module_name = "CTTMpvBridge",
+)
+
+swift_library(
+    name = "TTMPVKit",
+    srcs = glob(["Sources/TTMPVKit/**/*.swift"]),
+    copts = [
+        "-enable-testing",
+    ],
+    module_name = "TTMPVKit",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":CTTMpvBridge",
+    ],
+)
+
+swift_library(
+    name = "TTMPVKitTests",
+    testonly = True,
+    srcs = glob(["Tests/TTMPVKitTests/**/*.swift"]),
+    module_name = "TTMPVKitTests",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":TTMPVKit",
+    ],
+)
