@@ -5,22 +5,19 @@
 //
 // TTMPV: High-performance native media engine and headless playback core.
 
-import Testing
+import XCTest
 import Foundation
 @testable import TTMPVKit
 
-@Suite("TTMPVKit Core Integration Tests")
-struct TTMPVKitTests {
-    @Test("Verifies upstream libmpv API version negotiation")
+final class TTMPVKitTests: XCTestCase {
     func testApiVersionNegotiation() {
         let (major, minor) = MPVPlayer.apiVersion
-        #expect(major >= 1 || (major == 0 && minor >= 1))
+        XCTAssertTrue(major >= 1 || (major == 0 && minor >= 1))
     }
 
-    @Test("Verifies MPVPlayer lifecycle and command execution")
     func testPlayerLifecycle() {
         let player = MPVPlayer()
-        #expect(player.isPlaying == false)
+        XCTAssertFalse(player.isPlaying)
         player.togglePause()
         player.seek(to: 5.0, exact: true)
         player.setVolume(85.0)
@@ -28,11 +25,10 @@ struct TTMPVKitTests {
         player.setSubtitleTrack(id: 1)
     }
 
-    @Test("Verifies MPVMetalRenderLayer 1600 nits EDR parameters")
     func testMetalRenderLayerConfiguration() {
         let layer = MPVMetalRenderLayer()
-        #expect(layer.pixelFormat == .rgba16Float)
-        #expect(layer.wantsExtendedDynamicRangeContent == true)
-        #expect(layer.isOpaque == true)
+        XCTAssertEqual(layer.pixelFormat, .rgba16Float)
+        XCTAssertTrue(layer.wantsExtendedDynamicRangeContent)
+        XCTAssertTrue(layer.isOpaque)
     }
 }
